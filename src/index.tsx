@@ -78,8 +78,8 @@ app.get("/time", () => {
       stream.patchElements(await (<ClockDisplay />).toString());
       while (true) {
         const now = Temporal.Now.instant();
-        const msUntilNextSecond = 1000 - (now.epochMilliseconds % 1000);
-        await Bun.sleep(msUntilNextSecond);
+        const msUntilNextMinute = 60000 - (now.epochMilliseconds % 60000);
+        await Bun.sleep(msUntilNextMinute);
         stream.patchElements(await (<ClockDisplay />).toString());
       }
     },
