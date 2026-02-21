@@ -22,6 +22,7 @@ const Layout = ({
         type="module"
         src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js"
       ></script>
+      <script type="module" src="/clock.js"></script>
     </head>
     <body class="bg-slate-900 text-slate-100 min-h-screen antialiased">
       {children}
@@ -33,30 +34,35 @@ const Home = () => (
   <div
     id="app"
     data-init="@get('/time')"
-    class="flex flex-col items-center justify-center min-h-screen gap-8"
+    style="height: 100dvh; display: flex; align-items: center; justify-content: center;"
   >
-    <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-purple-500">
-      Big Clock
-    </h1>
-    <div id="clock" class="text-6xl font-mono text-cyan-400">
-      --:--:--
+    <div
+      id="clock-sizing-wrapper"
+      style="color: var(--color-cyan-400); font-weight: bold; text-align: center;"
+    >
+      <div id="clock" style="line-height: 1;">
+        <div>--</div>
+        <div>--</div>
+      </div>
     </div>
-    <p class="text-slate-400">Real-time clock powered by Datastar SSE</p>
   </div>
 );
 
 const ClockDisplay = () => {
-  const now = new Date().toLocaleTimeString();
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
   return (
-    <div id="clock" class="text-6xl font-mono text-cyan-400">
-      {now}
+    <div id="clock" data-init="resizeClock()" style="line-height: 1;">
+      <div>{hours}</div>
+      <div>{minutes}</div>
     </div>
   );
 };
 
 const app = new Hono();
 
-app.use("/styles.css", serveStatic({ path: "./public/styles.css" }));
+app.use("/*", serveStatic({ root: "./public" }));
 
 app.get("/", (c) => {
   return c.html(
