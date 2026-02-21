@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev:css": "tailwindcss -i ./styles/app.css -o ./public/styles.css --watch",
+    "build:css": "tailwindcss -i ./styles/app.css -o ./public/styles.css --minify",
+    "dev:css": "bun run build:css -- --watch",
     "dev:server": "bun --hot ./src/index.tsx",
     "dev": "bun run --parallel dev:css dev:server"
   },
