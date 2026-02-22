@@ -17,12 +17,15 @@ const Layout = ({
       <meta name="description" content="A modern web application" />
       <meta name="theme-color" content="#0f172a" />
       <title>{title}</title>
+      <link rel="icon" href="https://fav.farm/🕐" />
+      <link rel="manifest" href="/manifest.json" />
       <link rel="stylesheet" href="/styles.css" />
       <script
         type="module"
         src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js"
       ></script>
       <script type="module" src="/clock.js"></script>
+      <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js')</script>
     </head>
     <body class="bg-slate-900 text-slate-100 min-h-screen antialiased">
       {children}
@@ -52,10 +55,17 @@ const ClockDisplay = () => {
   const now = new Date();
   const hours = now.getHours().toString().padStart(2, "0");
   const minutes = now.getMinutes().toString().padStart(2, "0");
+  const seconds = now.getSeconds();
+  const countdown = 60 - seconds;
   return (
-    <div id="clock" data-init="resizeClock()" style="line-height: 1;">
-      <div>{hours}</div>
-      <div>{minutes}</div>
+    <div id="clock" data-init="resizeClock()" style="display: flex; justify-content: space-between; line-height: 1; width: 100%;">
+      <div>
+        <div>{hours}</div>
+        <div>{minutes}</div>
+      </div>
+      <div style="font-size: 0.3em; align-self: flex-end;">
+        {countdown.toString().padStart(2, "0")}
+      </div>
     </div>
   );
 };

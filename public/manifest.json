@@ -1,0 +1,16 @@
+{
+  "name": "Big Clock",
+  "short_name": "Big Clock",
+  "description": "A large, readable clock display",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "https://fav.farm/🕐",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
