@@ -25,7 +25,10 @@ const Layout = ({
         src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js"
       ></script>
       <script type="module" src="/clock.js"></script>
-      <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js')</script>
+      <script>
+        if('serviceWorker'in
+        navigator)navigator.serviceWorker.register('/sw.js')
+      </script>
     </head>
     <body class="bg-slate-900 text-slate-100 min-h-screen antialiased">
       {children}
@@ -36,7 +39,7 @@ const Layout = ({
 const Home = () => (
   <div
     id="app"
-    data-init="@get('/time')"
+    data-init="@get('/time?tz=' + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone))"
     style="height: 100dvh; display: flex; align-items: center; justify-content: center;"
   >
     <div
@@ -51,20 +54,19 @@ const Home = () => (
   </div>
 );
 
-const ClockDisplay = () => {
-  const now = new Date();
-  const hours = now.getHours().toString().padStart(2, "0");
-  const minutes = now.getMinutes().toString().padStart(2, "0");
-  const seconds = now.getSeconds();
-  const countdown = 60 - seconds;
+const ClockDisplay = ({ timezone }: { timezone: string }) => {
+  const now = Temporal.Now.zonedDateTimeISO(timezone);
+  const hours = now.hour.toString().padStart(2, "0");
+  const minutes = now.minute.toString().padStart(2, "0");
   return (
-    <div id="clock" data-init="resizeClock()" style="display: flex; justify-content: space-between; line-height: 1; width: 100%;">
+    <div
+      id="clock"
+      data-init="resizeClock()"
+      style="display: flex; justify-content: space-between; line-height: 1; width: 100%;"
+    >
       <div>
         <div>{hours}</div>
         <div>{minutes}</div>
-      </div>
-      <div style="font-size: 0.3em; align-self: flex-end;">
-        {countdown.toString().padStart(2, "0")}
       </div>
     </div>
   );
@@ -82,15 +84,16 @@ app.get("/", (c) => {
   );
 });
 
-app.get("/time", () => {
+app.get("/time", (c) => {
+  const timezone = c.req.query("tz") || "UTC";
   return ServerSentEventGenerator.stream(
     async (stream) => {
-      stream.patchElements(await (<ClockDisplay />).toString());
+      stream.patchElements(await (<ClockDisplay timezone={timezone} />).toString());
       while (true) {
         const now = Temporal.Now.instant();
         const msUntilNextMinute = 60000 - (now.epochMilliseconds % 60000);
         await Bun.sleep(msUntilNextMinute);
-        stream.patchElements(await (<ClockDisplay />).toString());
+        stream.patchElements(await (<ClockDisplay timezone={timezone} />).toString());
       }
     },
     { keepalive: true },
