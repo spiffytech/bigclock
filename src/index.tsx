@@ -77,6 +77,7 @@ const app = new Hono();
 app.use("/*", serveStatic({ root: "./public" }));
 
 app.get("/", (c) => {
+  c.header("Cache-Control", "no-cache, no-store, must-revalidate");
   return c.html(
     <Layout>
       <Home />
@@ -85,6 +86,7 @@ app.get("/", (c) => {
 });
 
 app.get("/time", (c) => {
+  c.header("Cache-Control", "no-cache, no-store, must-revalidate");
   const timezone = c.req.query("tz") || "UTC";
   return ServerSentEventGenerator.stream(
     async (stream) => {
