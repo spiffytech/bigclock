@@ -15,7 +15,7 @@ const Layout = ({
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="description" content="A modern web application" />
-      <meta name="theme-color" content="#0f172a" />
+      <meta name="theme-color" content="#050505" />
       <title>{title}</title>
       <link rel="icon" href="https://fav.farm/🕐" />
       <link rel="manifest" href="/manifest.json" />
@@ -30,7 +30,7 @@ const Layout = ({
         navigator)navigator.serviceWorker.register('/sw.js')
       </script>
     </head>
-    <body class="bg-slate-900 text-slate-100 min-h-screen antialiased">
+    <body class="text-slate-100 min-h-screen antialiased" style="background-color: #050505;">
       {children}
     </body>
   </html>
@@ -44,7 +44,7 @@ const Home = () => (
   >
     <div
       id="clock-sizing-wrapper"
-      style="color: var(--color-cyan-400); font-weight: bold; text-align: center;"
+      style="color: #f8fafc; font-weight: bold; text-align: center;"
     >
       <div id="clock" style="line-height: 1;">
         <div>--</div>
