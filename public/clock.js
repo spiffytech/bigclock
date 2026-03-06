@@ -18,5 +18,22 @@ function resizeClock() {
   wrapper.style.fontSize = 100 * ratio + "px";
 }
 
+async function requestWakeLock() {
+  try {
+    await navigator.wakeLock.request('screen');
+  } catch (err) {
+    // Not supported or blocked
+  }
+}
+
+if ('wakeLock' in navigator) {
+  requestWakeLock();
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      requestWakeLock();
+    }
+  });
+}
+
 window.resizeClock = resizeClock;
 window.addEventListener("resize", resizeClock);
